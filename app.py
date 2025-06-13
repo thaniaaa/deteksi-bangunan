@@ -25,68 +25,47 @@ def extract_features_from_image(image):
 
     return np.concatenate([lbp_hist, hog_feature, [edge_density]])
 
-# Sidebar Navigasi
+# Sidebar navigasi
 st.sidebar.title("Navigasi")
 page = st.sidebar.radio("Pilih Halaman:", ["Beranda", "Deteksi Gambar", "Tentang Model"])
 
 # Halaman Beranda
-st.markdown("""
-# Deteksi Kerusakan Bangunan Berbasis Citra
+if page == "Beranda":
+    st.title("Deteksi Kerusakan Bangunan Berbasis Citra")
 
-Aplikasi ini dikembangkan untuk membantu proses identifikasi kondisi bangunan pascabencana secara cepat dan efisien menggunakan citra visual. Dengan hanya mengunggah gambar bangunan, sistem akan memprediksi apakah bangunan **rusak** atau **tidak rusak** berdasarkan pola visual tertentu.
+    st.markdown("""
+    Aplikasi ini dikembangkan untuk membantu proses identifikasi kerusakan bangunan pascabencana menggunakan citra digital. Dengan hanya mengunggah gambar bangunan, sistem akan memprediksi apakah bangunan mengalami kerusakan atau tidak.
 
----
+    ## Tujuan Aplikasi
+    - Mempercepat proses inspeksi bangunan terdampak bencana
+    - Mengurangi ketergantungan pada inspeksi manual di lapangan
+    - Memberikan alternatif evaluasi cepat berbasis AI
 
-## Mengapa Aplikasi Ini Penting?
+    ## Fitur Utama
+    - Upload gambar bangunan
+    - Deteksi otomatis: rusak atau tidak rusak
+    - Hasil prediksi langsung ditampilkan
 
-Di daerah rawan bencana seperti Indonesia, banyak bangunan yang terdampak gempa bumi atau banjir harus segera dievaluasi kelayakannya. Namun, inspeksi manual memerlukan waktu, tenaga, dan ahli struktur. Dengan aplikasi ini, proses tersebut bisa dipercepat secara **otomatis** dan **berbasis AI**.
+    ## Cara Menggunakan
+    1. Masuk ke halaman Deteksi Gambar
+    2. Upload gambar bangunan
+    3. Tunggu beberapa detik, hasil akan muncul di layar
 
----
+    ## Siapa yang Cocok Menggunakan Ini?
 
-## Teknologi yang Digunakan:
+    - Mahasiswa teknik sipil atau informatika
+    - Relawan kebencanaan
+    - Dinas PU atau tim inspeksi
+    - Peneliti AI di bidang bangunan & citra digital
 
-- **Random Forest Classifier**: Algoritma machine learning berbasis pohon keputusan.
-- **Ekstraksi Fitur Citra**:
-  - `Edge Density` untuk mendeteksi jumlah tepi atau keretakan.
-  - `Local Binary Pattern (LBP)` untuk tekstur dinding atau permukaan.
-  - `Histogram of Oriented Gradients (HOG)` untuk mengenali pola arah dan struktur bentuk.
+    Aplikasi ini cocok digunakan oleh mahasiswa, instansi kebencanaan, serta pihak lain yang memerlukan evaluasi awal kondisi bangunan.
+    """)
 
----
-
-## Fitur Utama
-
-- Upload gambar bangunan (JPEG / PNG)
-- Deteksi otomatis: rusak / tidak rusak
-- Tampilan hasil dan kepercayaan klasifikasi
-- Model dilatih pada dataset bangunan asli pascabencana
-
----
-
-## Cara Menggunakan Aplikasi:
-
-1. Masuk ke tab **Deteksi Gambar** di sebelah kiri
-2. Klik "Upload Gambar" lalu pilih gambar bangunan
-3. Tunggu beberapa detik, sistem akan menganalisis dan menampilkan hasil prediksi
-
----
-
-## Siapa yang Cocok Menggunakan Ini?
-
-- Mahasiswa teknik sipil atau informatika
-- Relawan kebencanaan
-- Dinas PU atau tim inspeksi
-- Peneliti AI di bidang bangunan & citra digital
-
----
-
-*Aplikasi ini adalah bagian dari riset dan masih dapat dikembangkan dengan dataset yang lebih luas, model lanjutan seperti CNN, dan integrasi peta lokasi kerusakan.*
-""")
-
-
-# Halaman Deteksi
+# Halaman Deteksi Gambar
 elif page == "Deteksi Gambar":
     st.title("Deteksi Kerusakan Bangunan")
-    uploaded_file = st.file_uploader("Upload Gambar", type=["jpg", "jpeg", "png"])
+
+    uploaded_file = st.file_uploader("Upload Gambar Bangunan", type=["jpg", "jpeg", "png"])
 
     if uploaded_file is not None:
         image = Image.open(uploaded_file).convert("RGB")
@@ -95,27 +74,31 @@ elif page == "Deteksi Gambar":
         with st.spinner("Mendeteksi..."):
             features = extract_features_from_image(image)
             prediction = model.predict([features])[0]
-            result = "🟥 Bangunan Rusak" if prediction == 1 else "🟩 Bangunan Tidak Rusak"
-        
-        st.success(f"Hasil Deteksi: {result}")
+
+        if prediction == 1:
+            st.success("Hasil Deteksi: Bangunan Rusak")
+        else:
+            st.success("Hasil Deteksi: Bangunan Tidak Rusak")
 
 # Halaman Tentang Model
 elif page == "Tentang Model":
-    st.title("Tentang Model")
+    st.title("Tentang Model Deteksi")
+
     st.markdown("""
-    ### Algoritma: Random Forest Classifier  
-    - Menggunakan 3 fitur utama dari gambar:
-      - **Edge Density** (Canny)
-      - **Local Binary Pattern (LBP)** untuk tekstur
-      - **Histogram of Oriented Gradients (HOG)** untuk bentuk
+    Model yang digunakan dalam aplikasi ini adalah Random Forest Classifier, yaitu salah satu algoritma machine learning berbasis pohon keputusan yang bekerja secara ansambel (menggabungkan banyak pohon).
+
+    ### Fitur Ekstraksi:
+    - Edge Density: Mengukur jumlah tepi/retakan dalam gambar
+    - LBP (Local Binary Pattern): Mengidentifikasi tekstur permukaan
+    - HOG (Histogram of Oriented Gradients): Menangkap pola arah dan kontur
 
     ### Evaluasi Model:
-    - **Akurasi:** 75%
-    - **Presisi kelas rusak:** 1.00
-    - **Recall kelas rusak:** 0.60
-    - **F1-score:** 0.75
+    - Akurasi: 75%
+    - Presisi kelas rusak: 100%
+    - Recall kelas rusak: 60%
+    - F1-score: 75%
 
-    Model ini cukup baik untuk klasifikasi awal. Performa dapat ditingkatkan dengan dataset lebih besar dan augmentasi data.
+    Model dilatih menggunakan dataset bangunan rusak dan tidak rusak akibat gempa atau bencana lainnya. Dataset ini kemudian diproses dan diseimbangkan agar hasil klasifikasi tidak bias.
 
-    ---
+    Aplikasi ini dapat dikembangkan lebih lanjut dengan menambahkan lebih banyak data, menggunakan model deep learning, atau menambahkan klasifikasi tingkat kerusakan (ringan, sedang, berat).
     """)
