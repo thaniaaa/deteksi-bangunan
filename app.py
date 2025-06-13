@@ -30,27 +30,62 @@ st.sidebar.title("Navigasi")
 page = st.sidebar.radio("Pilih Halaman:", ["Beranda", "Deteksi Gambar", "Tentang Model"])
 
 # Halaman Beranda
-if page == "Beranda":
-    st.title("🧱 Deteksi Kerusakan Bangunan Berbasis Citra")
-    st.markdown("""
-    Aplikasi ini dikembangkan untuk membantu identifikasi kondisi bangunan pascabencana berdasarkan citra digital.
+st.markdown("""
+# Deteksi Kerusakan Bangunan Berbasis Citra
 
-    ### 📌 Fitur Utama:
-    - Upload gambar bangunan
-    - Deteksi apakah bangunan **rusak** atau **tidak rusak**
-    - Model menggunakan algoritma **Random Forest** dengan fitur **edge**, **LBP**, dan **HOG**
-    
-    ### 📷 Contoh Penggunaan:
-    1. Masuk ke tab *Deteksi Gambar*
-    2. Upload foto bangunan
-    3. Sistem akan menampilkan hasil klasifikasi
+Aplikasi ini dikembangkan untuk membantu proses identifikasi kondisi bangunan pascabencana secara cepat dan efisien menggunakan citra visual. Dengan hanya mengunggah gambar bangunan, sistem akan memprediksi apakah bangunan **rusak** atau **tidak rusak** berdasarkan pola visual tertentu.
 
-    ---
-    """)
+---
+
+## Mengapa Aplikasi Ini Penting?
+
+Di daerah rawan bencana seperti Indonesia, banyak bangunan yang terdampak gempa bumi atau banjir harus segera dievaluasi kelayakannya. Namun, inspeksi manual memerlukan waktu, tenaga, dan ahli struktur. Dengan aplikasi ini, proses tersebut bisa dipercepat secara **otomatis** dan **berbasis AI**.
+
+---
+
+## Teknologi yang Digunakan:
+
+- **Random Forest Classifier**: Algoritma machine learning berbasis pohon keputusan.
+- **Ekstraksi Fitur Citra**:
+  - `Edge Density` untuk mendeteksi jumlah tepi atau keretakan.
+  - `Local Binary Pattern (LBP)` untuk tekstur dinding atau permukaan.
+  - `Histogram of Oriented Gradients (HOG)` untuk mengenali pola arah dan struktur bentuk.
+
+---
+
+## Fitur Utama
+
+- Upload gambar bangunan (JPEG / PNG)
+- Deteksi otomatis: rusak / tidak rusak
+- Tampilan hasil dan kepercayaan klasifikasi
+- Model dilatih pada dataset bangunan asli pascabencana
+
+---
+
+## Cara Menggunakan Aplikasi:
+
+1. Masuk ke tab **Deteksi Gambar** di sebelah kiri
+2. Klik "Upload Gambar" lalu pilih gambar bangunan
+3. Tunggu beberapa detik, sistem akan menganalisis dan menampilkan hasil prediksi
+
+---
+
+## Siapa yang Cocok Menggunakan Ini?
+
+- Mahasiswa teknik sipil atau informatika
+- Relawan kebencanaan
+- Dinas PU atau tim inspeksi
+- Peneliti AI di bidang bangunan & citra digital
+
+---
+
+*Aplikasi ini adalah bagian dari riset dan masih dapat dikembangkan dengan dataset yang lebih luas, model lanjutan seperti CNN, dan integrasi peta lokasi kerusakan.*
+""")
+
 
 # Halaman Deteksi
 elif page == "Deteksi Gambar":
-    st.title("📤 Deteksi Kerusakan Bangunan")
+    st.title("Deteksi Kerusakan Bangunan")
     uploaded_file = st.file_uploader("Upload Gambar", type=["jpg", "jpeg", "png"])
 
     if uploaded_file is not None:
@@ -66,7 +101,7 @@ elif page == "Deteksi Gambar":
 
 # Halaman Tentang Model
 elif page == "Tentang Model":
-    st.title("📊 Tentang Model")
+    st.title("Tentang Model")
     st.markdown("""
     ### Algoritma: Random Forest Classifier  
     - Menggunakan 3 fitur utama dari gambar:
